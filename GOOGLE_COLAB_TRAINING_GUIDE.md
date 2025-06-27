@@ -64,103 +64,100 @@ os.makedirs('/content/McGill_Kernel/results', exist_ok=True)
 print("✅ Colab environment setup complete!")
 ```
 
-### Step 2: Upload Project Files
+### Step 2: Clone Project from GitHub
 
-#### Option A: Direct Upload (Recommended for Small Projects)
 ```python
-# Upload project files directly to Colab
-from google.colab import files
-import shutil
-import zipfile
+# Clone your GitHub repository
+GITHUB_REPO_URL = "https://github.com/yourusername/mcgill-kernel.git"  # Replace with your repo URL
+PROJECT_PATH = "/content/McGill_Kernel"
 
-print("📁 Upload your project files...")
+print("📥 Cloning project from GitHub...")
 
-# Method 1: Upload individual Python files
-uploaded = files.upload()
+# Clone the repository
+!git clone {GITHUB_REPO_URL} {PROJECT_PATH}
 
-# Move uploaded files to correct locations
-for filename in uploaded.keys():
-    if filename.endswith('.py'):
-        if 'trainer' in filename.lower():
-            shutil.move(filename, f'/content/McGill_Kernel/scripts/{filename}')
-        else:
-            shutil.move(filename, f'/content/McGill_Kernel/scripts/{filename}')
-    elif filename.endswith('.csv'):
-        shutil.move(filename, f'/content/McGill_Kernel/data/{filename}')
-
-print("✅ Files uploaded and organized!")
-```
-
-#### Option B: Google Drive Integration (Recommended for Large Projects)
-```python
-# Sync project from Google Drive
-import shutil
-
-# Assuming you've uploaded your project to Google Drive
-DRIVE_PROJECT_PATH = '/content/drive/MyDrive/McGill_Kernel'  # Adjust path
-COLAB_PROJECT_PATH = '/content/McGill_Kernel'
-
-# Copy entire project from Drive to Colab
-if os.path.exists(DRIVE_PROJECT_PATH):
-    shutil.copytree(DRIVE_PROJECT_PATH, COLAB_PROJECT_PATH, dirs_exist_ok=True)
-    print("✅ Project synced from Google Drive!")
-else:
-    print("❌ Project not found in Google Drive. Please upload it first.")
+# Change to project directory
+import os
+os.chdir(PROJECT_PATH)
 
 # Verify project structure
-!ls -la /content/McGill_Kernel/
-!ls -la /content/McGill_Kernel/scripts/
+print("✅ Project cloned successfully!")
+print("\n📁 Project structure:")
+!ls -la
+!ls -la scripts/
+
+# Check if required files exist
+required_files = [
+    'scripts/hansard_pipeline.py',
+    'scripts/hybrid_nunavut_parser.py', 
+    'scripts/tokenizer_trainer.py',
+    'requirements.txt'
+]
+
+print("\n🔍 Checking required files:")
+for file_path in required_files:
+    if os.path.exists(file_path):
+        print(f"✅ {file_path}")
+    else:
+        print(f"❌ MISSING: {file_path}")
 ```
 
-#### Option C: GitHub Integration
+### Step 3: Setup Data Processing
+
 ```python
-# Clone from GitHub repository
-!git clone https://github.com/yourusername/mcgill-kernel.git /content/McGill_Kernel
+# Since datasets are large and not included in repo, we'll generate them using the pipeline
+print("📊 Setting up data processing...")
 
-# Or download specific files
-!wget -O /content/McGill_Kernel/scripts/bert_trainer_specification.py \
-    https://raw.githubusercontent.com/yourusername/repo/main/scripts/bert_trainer_specification.py
+# Check if we have the raw data files needed
+print("🔍 Checking for raw data files:")
+raw_data_files = [
+    'data/preprocessed_nunavut_hansard.txt',
+    'data/cleaned_canadian_hansard.csv'
+]
 
-print("✅ Project downloaded from GitHub!")
+for file_path in raw_data_files:
+    if os.path.exists(file_path):
+        print(f"✅ {file_path}")
+    else:
+        print(f"❌ MISSING: {file_path}")
+        print(f"   You'll need to add this file to your GitHub repo or generate it")
+
+print("\n💡 Note: Large datasets are excluded from GitHub due to size limits.")
+print("   You can either:")
+print("   1. Use Git LFS for large files")
+print("   2. Process smaller sample datasets")
+print("   3. Generate datasets using the pipeline scripts")
 ```
 
-### Step 3: Upload Dataset Files
+### Step 4: Install Dependencies and Setup Environment
 
 ```python
-# Upload dataset files (if not already in Drive)
-print("📊 Upload dataset files...")
-print("Expected files:")
-print("- dataset_a_train.csv, dataset_a_val.csv, dataset_a_test.csv")
-print("- dataset_b_train.csv, dataset_b_val.csv, dataset_b_test.csv") 
-print("- dataset_c_train.csv, dataset_c_val.csv, dataset_c_test.csv")
+# Install project dependencies
+print("📦 Installing project dependencies...")
 
-# Upload datasets
-uploaded_data = files.upload()
+# Install from requirements.txt if it exists
+if os.path.exists('requirements.txt'):
+    !pip install -r requirements.txt
+else:
+    # Install essential packages for the project
+    !pip install pandas numpy tokenizers transformers torch
 
-# Move to data directory
-for filename in uploaded_data.keys():
-    if filename.endswith('.csv'):
-        shutil.move(filename, f'/content/McGill_Kernel/data/{filename}')
+print("✅ Dependencies installed!")
 
-# Verify datasets
-!ls -la /content/McGill_Kernel/data/*.csv
-```
+# Verify Python environment
+import sys
+print(f"Python version: {sys.version}")
+print(f"Working directory: {os.getcwd()}")
 
-### Step 4: Create Colab-Optimized Training Scripts
-
-```python
-# Create Colab-optimized versions of your training scripts
-os.chdir('/content/McGill_Kernel/scripts')
-
-# Modify paths for Colab environment
-!sed -i 's|../data/|/content/McGill_Kernel/data/|g' *.py
-!sed -i 's|../models/|/content/McGill_Kernel/models/|g' *.py  
-!sed -i 's|../logs/|/content/McGill_Kernel/logs/|g' *.py
-!sed -i 's|../tokenizer/|/content/McGill_Kernel/tokenizer/|g' *.py
-!sed -i 's|../checkpoints/|/content/McGill_Kernel/checkpoints/|g' *.py
-!sed -i 's|../results/|/content/McGill_Kernel/results/|g' *.py
-
-print("✅ Paths updated for Colab environment!")
+# Test import of key modules
+try:
+    import pandas as pd
+    import numpy as np
+    from tokenizers import ByteLevelBPETokenizer
+    from transformers import RobertaConfig, RobertaForMaskedLM
+    print("✅ All required modules imported successfully!")
+except ImportError as e:
+    print(f"❌ Import error: {e}")
 ```
 
 ---
@@ -170,21 +167,27 @@ print("✅ Paths updated for Colab environment!")
 ### Quick Training Setup
 
 ```python
-# Change to project directory
+# Ensure we're in the project directory  
 os.chdir('/content/McGill_Kernel')
 
-# Create BPE tokenizer first
-print("🔤 Creating BPE tokenizer...")
-!python scripts/create_bpe_tokenizer.py
+# Run the data processing pipeline to create datasets
+print("📊 Running data processing pipeline...")
+!python scripts/hansard_pipeline.py
 
-# Create research-optimized balanced datasets
-print("📊 Creating research-optimized datasets...")
-!python scripts/create_research_optimized_datasets.py --approach research --balanced
+# Create BPE tokenizer
+print("🔤 Creating BPE tokenizer...")
+!python scripts/tokenizer_trainer.py
 
 # Verify setup
 print("✅ Checking setup...")
+print("\n📁 Data files created:")
+!ls -la data/dataset_*.csv
+
+print("\n🔤 Tokenizer files:")
 !ls -la tokenizer/hansard-bpe-tokenizer/
-!ls -la data/dataset_*_balanced_research_*.csv
+
+print("\n📋 Validation reports:")
+!ls -la data/*report*.json
 ```
 
 ### Complete Training Execution
@@ -465,27 +468,67 @@ def check_training_status():
 check_training_status()
 ```
 
-### Download Trained Models
+### Save Results to GitHub
 
 ```python
-# Download trained models to local machine
-from google.colab import files
-import zipfile
+# Save results back to your GitHub repository
+def save_results_to_github():
+    """Save training results back to GitHub repository"""
+    
+    print("📤 Saving results to GitHub...")
+    
+    # Configure git (replace with your details)
+    !git config --global user.email "your.email@example.com"
+    !git config --global user.name "Your Name"
+    
+    # Add trained models and results (if they're not too large)
+    !git add models/ logs/ results/
+    
+    # Create commit
+    !git commit -m "Add trained models and results from Colab training"
+    
+    # Push to GitHub (you may need to authenticate)
+    print("🔐 You may need to authenticate with GitHub...")
+    print("Use a personal access token if prompted for password")
+    !git push origin main
+    
+    print("✅ Results saved to GitHub repository!")
 
-def download_results():
-    """Prepare and download training results"""
+# Alternative: Create a results summary instead of uploading large files
+def create_results_summary():
+    """Create a summary of training results"""
     
-    # Create zip file of results
-    !cd /content/McGill_Kernel && zip -r training_results.zip models/ logs/ results/
+    summary = f"""
+# Training Results Summary
+
+Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Models Trained
+"""
     
-    # Download zip file
-    files.download('/content/McGill_Kernel/training_results.zip')
+    # Check which models were created
+    if os.path.exists('/content/McGill_Kernel/models'):
+        models = os.listdir('/content/McGill_Kernel/models')
+        for model in models:
+            summary += f"- {model}\n"
     
-    print("✅ Results downloaded!")
-    print("Extract the zip file to continue working locally.")
+    # Add log information
+    if os.path.exists('/content/McGill_Kernel/logs'):
+        summary += "\n## Training Logs\n"
+        logs = os.listdir('/content/McGill_Kernel/logs')
+        for log in logs:
+            summary += f"- {log}\n"
+    
+    # Write summary file
+    with open('/content/McGill_Kernel/TRAINING_RESULTS.md', 'w') as f:
+        f.write(summary)
+    
+    print("✅ Results summary created!")
+    print("📄 Check TRAINING_RESULTS.md for details")
 
 # Call when training is complete
-# download_results()
+# create_results_summary()
+# save_results_to_github()
 ```
 
 ---
