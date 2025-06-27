@@ -1,0 +1,100 @@
+{
+  "creation_timestamp": "2025-06-09T22:10:57.923310",
+  "temporal_range": "1999-2017",
+  "datasets": {
+    "A": {
+      "description": "100% Nunavut Hansard",
+      "file": "dataset_a_nunavut_only.csv",
+      "statistics": {
+        "total_records": 193017,
+        "unique_speakers": 12750,
+        "unique_dates": 27,
+        "date_range": [
+          "1999-04-01 00:00:00",
+          "1999-11-03 00:00:00"
+        ],
+        "date_span_years": 0.5913757700205339,
+        "avg_words_per_speech": 78.92661786267531,
+        "median_words_per_speech": 48.0,
+        "total_words": "15234179",
+        "avg_speeches_per_speaker": 15.137098039215687,
+        "median_speeches_per_speaker": 1.0,
+        "max_speeches_per_speaker": "29488"
+      }
+    },
+    "B": {
+      "description": "100% Canadian Hansard",
+      "file": "dataset_b_canadian_only.csv",
+      "statistics": {
+        "total_records": 529243,
+        "unique_speakers": 1112,
+        "unique_dates": 2140,
+        "date_range": [
+          "1999-02-01 00:00:00",
+          "2017-12-13 00:00:00"
+        ],
+        "date_span_years": 18.863791923340177,
+        "avg_words_per_speech": 195.30296857965055,
+        "median_words_per_speech": 96.0,
+        "total_words": "103362729",
+        "avg_speeches_per_speaker": 467.853417266187,
+        "median_speeches_per_speaker": 231.5,
+        "max_speeches_per_speaker": "8834"
+      }
+    },
+    "C": {
+      "description": "50% Nunavut + 50% Canadian Hansard",
+      "file": "dataset_c_mixed.csv",
+      "statistics": {
+        "total_records": 193016,
+        "unique_speakers": 8243,
+        "unique_dates": 2138,
+        "date_range": [
+          "1999-02-01 00:00:00",
+          "2017-12-13 00:00:00"
+        ],
+        "date_span_years": 18.863791923340177,
+        "avg_words_per_speech": 137.1945071911137,
+        "median_words_per_speech": 75.0,
+        "total_words": "26480735",
+        "avg_speeches_per_speaker": 23.217881839136236,
+        "median_speeches_per_speaker": 1.0,
+        "max_speeches_per_speaker": "16154",
+        "canadian_records": "96508",
+        "nunavut_records": "96508",
+        "canadian_percentage": 50.0,
+        "nunavut_percentage": 50.0
+      }
+    }
+  },
+  "train_test_splits": {
+    "A": {
+      "train_size": 135111,
+      "val_size": 19302,
+      "test_size": 38604,
+      "train_file": "../data/dataset_a_train.csv",
+      "val_file": "../data/dataset_a_val.csv",
+      "test_file": "../data/dataset_a_test.csv"
+    },
+    "B": {
+      "train_size": 370469,
+      "val_size": 52925,
+      "test_size": 105849,
+      "train_file": "../data/dataset_b_train.csv",
+      "val_file": "../data/dataset_b_val.csv",
+      "test_file": "../data/dataset_b_test.csv"
+    },
+    "C": {
+      "train_size": 135110,
+      "val_size": 19302,
+      "test_size": 38604,
+      "train_file": "../data/dataset_c_train.csv",
+      "val_file": "../data/dataset_c_val.csv",
+      "test_file": "../data/dataset_c_test.csv"
+    }
+  },
+  "data_sources": {
+    "canadian_hansard": "../data/cleaned_canadian_hansard.csv",
+    "nunavut_hansard": "../data/parsed_nunavut_hansard.csv"
+  }
+}

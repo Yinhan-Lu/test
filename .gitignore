@@ -44,18 +44,35 @@ ENV/
 ehthumbs.db
 Thumbs.db
 
-# Large data files and datasets
+# Large data files (keep directory structure)
 data/dataset_*.csv
 data/preprocessed_nunavut_hansard.txt
 data/cleaned_canadian_hansard.csv
 data/filtered_canadian_hansard.csv
-data/*.json
-data/*.txt
+data/pipeline_report.json
+data/validation_report.json
 
-# Model outputs and training artifacts
-models/
-logs/
-results/
+# Keep data directory structure but exclude large files
+!data/
+!data/.gitkeep
+!data/DATASET_SUMMARY.md
+
+# Model outputs (keep directory structure)
+models/*
+!models/
+!models/.gitkeep
+
+# Training logs (keep directory structure)  
+logs/*
+!logs/
+!logs/.gitkeep
+
+# Results (keep directory structure)
+results/*
+!results/
+!results/.gitkeep
+
+# Model file types
 *.bin
 *.safetensors
 *.pt
@@ -63,9 +80,13 @@ results/
 checkpoint-*/
 runs/
 
-# Tokenizer files (keep structure but exclude large files)
+# Tokenizer files - keep small config files, exclude large vocab files
 tokenizer/hansard-bpe-tokenizer/vocab.json
 tokenizer/hansard-bpe-tokenizer/merges.txt
+!tokenizer/
+!tokenizer/.gitkeep
+!tokenizer/hansard-bpe-tokenizer/
+!tokenizer/hansard-bpe-tokenizer/.gitkeep
 
 # Backup directories
 backup_before_cleanup/

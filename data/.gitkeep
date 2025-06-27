@@ -1,0 +1,2 @@
+# This file ensures the data/ directory is tracked in git
+# Large dataset files are excluded by .gitignore but directory structure is preserved
