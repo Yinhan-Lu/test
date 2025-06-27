@@ -50,16 +50,8 @@ if torch.cuda.is_available():
     print(f"GPU Name: {torch.cuda.get_device_name(0)}")
     print(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f}GB")
 
-# Create project directory structure
-import os
-os.makedirs('/content/McGill_Kernel', exist_ok=True)
-os.makedirs('/content/McGill_Kernel/scripts', exist_ok=True)
-os.makedirs('/content/McGill_Kernel/data', exist_ok=True)
-os.makedirs('/content/McGill_Kernel/models', exist_ok=True)
-os.makedirs('/content/McGill_Kernel/logs', exist_ok=True)
-os.makedirs('/content/McGill_Kernel/tokenizer', exist_ok=True)
-os.makedirs('/content/McGill_Kernel/checkpoints', exist_ok=True)
-os.makedirs('/content/McGill_Kernel/results', exist_ok=True)
+# Note: We'll create the project structure when we clone from GitHub
+# No need to create directories manually since they're in the repo
 
 print("✅ Colab environment setup complete!")
 ```
@@ -68,8 +60,8 @@ print("✅ Colab environment setup complete!")
 
 ```python
 # Clone your GitHub repository
-GITHUB_REPO_URL = "https://github.com/yourusername/mcgill-kernel.git"  # Replace with your repo URL
-PROJECT_PATH = "/content/McGill_Kernel"
+GITHUB_REPO_URL = "https://github.com/Yinhan-Lu/McGill-Kernel.git"
+PROJECT_PATH = "/content/McGill-Kernel"  # Match your repo name
 
 print("📥 Cloning project from GitHub...")
 
@@ -174,7 +166,7 @@ except ImportError as e:
 
 ```python
 # Ensure we're in the project directory  
-os.chdir('/content/McGill_Kernel')
+os.chdir('/content/McGill-Kernel')
 
 # Run the data processing pipeline to create datasets
 print("📊 Running data processing pipeline...")
@@ -220,7 +212,7 @@ def run_training(dataset, description):
     cmd = f"python scripts/bert_trainer_specification.py {dataset} --balanced --research-optimized --spec-compliant"
     
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, cwd='/content/McGill_Kernel')
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, cwd='/content/McGill-Kernel')
         
         end_time = time.time()
         duration = end_time - start_time
@@ -273,9 +265,9 @@ import time
 def monitor_training():
     """Monitor training progress"""
     log_dirs = [
-        '/content/McGill_Kernel/logs/model_a_balanced_research_spec',
-        '/content/McGill_Kernel/logs/model_b_balanced_research_spec', 
-        '/content/McGill_Kernel/logs/model_c_balanced_research_spec'
+        '/content/McGill-Kernel/logs/model_a_balanced_research_spec',
+        '/content/McGill-Kernel/logs/model_b_balanced_research_spec', 
+        '/content/McGill-Kernel/logs/model_c_balanced_research_spec'
     ]
     
     while True:
@@ -294,7 +286,7 @@ def monitor_training():
                 print(f"Dataset {dataset}: Not started")
         
         # Check model outputs
-        model_dirs = [d for d in os.listdir('/content/McGill_Kernel/models/') 
+        model_dirs = [d for d in os.listdir('/content/McGill-Kernel/models/') 
                      if 'balanced_research_spec' in d]
         print(f"\n📁 Models created: {len(model_dirs)}")
         for model_dir in model_dirs:
@@ -450,7 +442,7 @@ def check_training_status():
     print("=" * 50)
     
     # Check models
-    model_dir = '/content/McGill_Kernel/models'
+    model_dir = '/content/McGill-Kernel/models'
     if os.path.exists(model_dir):
         models = [d for d in os.listdir(model_dir) if 'balanced_research_spec' in d]
         print(f"✅ Models completed: {len(models)}/3")
@@ -458,7 +450,7 @@ def check_training_status():
             print(f"  - {model}")
     
     # Check logs
-    log_dir = '/content/McGill_Kernel/logs'
+    log_dir = '/content/McGill-Kernel/logs'
     if os.path.exists(log_dir):
         logs = os.listdir(log_dir)
         print(f"📝 Log directories: {len(logs)}")
@@ -513,20 +505,20 @@ Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
     
     # Check which models were created
-    if os.path.exists('/content/McGill_Kernel/models'):
-        models = os.listdir('/content/McGill_Kernel/models')
+    if os.path.exists('/content/McGill-Kernel/models'):
+        models = os.listdir('/content/McGill-Kernel/models')
         for model in models:
             summary += f"- {model}\n"
     
     # Add log information
-    if os.path.exists('/content/McGill_Kernel/logs'):
+    if os.path.exists('/content/McGill-Kernel/logs'):
         summary += "\n## Training Logs\n"
-        logs = os.listdir('/content/McGill_Kernel/logs')
+        logs = os.listdir('/content/McGill-Kernel/logs')
         for log in logs:
             summary += f"- {log}\n"
     
     # Write summary file
-    with open('/content/McGill_Kernel/TRAINING_RESULTS.md', 'w') as f:
+    with open('/content/McGill-Kernel/TRAINING_RESULTS.md', 'w') as f:
         f.write(summary)
     
     print("✅ Results summary created!")
@@ -550,7 +542,7 @@ from google.colab import drive
 drive.mount('/content/drive')
 
 # Restore from backup
-!cp -r /content/drive/MyDrive/McGill_Kernel_Results/* /content/McGill_Kernel/
+!cp -r /content/drive/MyDrive/McGill_Kernel_Results/* /content/McGill-Kernel/
 
 # Resume training from checkpoint
 !python scripts/bert_trainer_specification.py a --balanced --research-optimized --spec-compliant
@@ -561,10 +553,10 @@ drive.mount('/content/drive')
 # If you get CUDA OOM errors:
 # 1. Restart runtime
 # 2. Modify batch size in your script
-!sed -i 's/per_device_train_batch_size=8/per_device_train_batch_size=4/g' /content/McGill_Kernel/scripts/bert_trainer_specification.py
+!sed -i 's/per_device_train_batch_size=8/per_device_train_batch_size=4/g' /content/McGill-Kernel/scripts/bert_trainer_specification.py
 
 # 3. Or use CPU (slower but works)
-!sed -i 's/fp16=self.device.type == "cuda"/fp16=False/g' /content/McGill_Kernel/scripts/bert_trainer_specification.py
+!sed -i 's/fp16=self.device.type == "cuda"/fp16=False/g' /content/McGill-Kernel/scripts/bert_trainer_specification.py
 ```
 
 #### 3. File Not Found Errors
@@ -572,10 +564,10 @@ drive.mount('/content/drive')
 # Verify all files are in correct locations
 def verify_setup():
     required_files = [
-        '/content/McGill_Kernel/scripts/bert_trainer_specification.py',
-        '/content/McGill_Kernel/scripts/create_research_optimized_datasets.py',
-        '/content/McGill_Kernel/data/dataset_a_train.csv',
-        '/content/McGill_Kernel/tokenizer/hansard-bpe-tokenizer/vocab.json'
+        '/content/McGill-Kernel/scripts/bert_trainer_specification.py',
+        '/content/McGill-Kernel/scripts/create_research_optimized_datasets.py',
+        '/content/McGill-Kernel/data/dataset_a_train.csv',
+        '/content/McGill-Kernel/tokenizer/hansard-bpe-tokenizer/vocab.json'
     ]
     
     for file_path in required_files:
