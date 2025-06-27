@@ -1,0 +1,86 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+PIPFILE.lock
+
+# Virtual environments
+kernel_venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Large data files and datasets
+data/dataset_*.csv
+data/preprocessed_nunavut_hansard.txt
+data/cleaned_canadian_hansard.csv
+data/filtered_canadian_hansard.csv
+data/*.json
+data/*.txt
+
+# Model outputs and training artifacts
+models/
+logs/
+results/
+*.bin
+*.safetensors
+*.pt
+*.pth
+checkpoint-*/
+runs/
+
+# Tokenizer files (keep structure but exclude large files)
+tokenizer/hansard-bpe-tokenizer/vocab.json
+tokenizer/hansard-bpe-tokenizer/merges.txt
+
+# Backup directories
+backup_before_cleanup/
+
+# Training scripts outputs
+*.log
+*.out
+*.err
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# Research papers and large docs
+docs/*.pdf
+docs/*.docx
+
+# Shell script outputs
+*.sh.log
