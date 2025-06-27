@@ -73,11 +73,17 @@ PROJECT_PATH = "/content/McGill_Kernel"
 
 print("📥 Cloning project from GitHub...")
 
+# Remove existing directory if it exists
+import shutil
+import os
+if os.path.exists(PROJECT_PATH):
+    print(f"🗑️ Removing existing directory: {PROJECT_PATH}")
+    shutil.rmtree(PROJECT_PATH)
+
 # Clone the repository
 !git clone {GITHUB_REPO_URL} {PROJECT_PATH}
 
 # Change to project directory
-import os
 os.chdir(PROJECT_PATH)
 
 # Verify project structure
